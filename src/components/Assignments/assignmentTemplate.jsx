@@ -1,6 +1,6 @@
 import React from "react";
 
-const Assignment = React.memo((props) => {
+const AssignmentTemplate = React.memo((props) => {
   console.log("ASSIGNMENT " + JSON.stringify(props));
   return (
     <div>
@@ -13,4 +13,4 @@ const Assignment = React.memo((props) => {
   );
 });
 
-export default Assignment;
+export default AssignmentTemplate;

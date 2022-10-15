@@ -1,38 +1,30 @@
-.App {
-  text-align: center;
+:root {
+  --main: #5A4088;
+  --secondary: #87794D;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h1 {
+  font-size: 3em;
+  font-family: "Highgate";
+  font-weight: 900;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h2 {
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 2em;
+  font-family: "Highgate";
+  font-weight: 700;
+  border: 0.3rem var(--main) solid;
+  border-radius: 5px;
+  display: inline-block;
+  left: 100%;
+  right: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input {
+  margin: 5px;
+  padding: 0.25em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }

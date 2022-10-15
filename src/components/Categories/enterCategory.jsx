@@ -1,16 +1,22 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import Category from "./Category";
 import { v4 as uuid } from "uuid";
+import CategoryTemplate from "./categoryTemplate";
+import "./enterCategory.style.css"
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+
 
 function EnterCategory(props) {
   const [catName, setcatName] = useState("");
   const [catWeight, setcatWeight] = useState("");
   const [categories, setCategories] = useState([]);
+  const [totalWeight, settotalWeight] = useState(0);
   let allGood = false;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let totalWeight = 0;
+    console.log("totalWeight = ", totalWeight);
+    // let totalWeight = 0
     if (catWeight <= 100 && totalWeight <= 100) {
       allGood = true;
     }
@@ -25,10 +31,11 @@ function EnterCategory(props) {
         weight: catWeight,
         average: 0,
       };
-      totalWeight += parseInt(newCat["weight"]);
-      console.log("totalWeight = ", totalWeight);
+      // totalWeight += parseInt(newCat["weight"]);
+      settotalWeight(parseInt(catWeight + totalWeight))
       //adding it into array
       setCategories((oldList) => [newCat, ...oldList]);
+      console.log("totalWeight = ", totalWeight);
       setcatName("");
       setcatWeight("");
     } else alert("Something went wrong!");
@@ -70,41 +77,44 @@ function EnterCategory(props) {
 
   return (
     <div>
-      <h1>YOUR GRADE IS {fg}%</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter Category Name:
-          <input
-            required
-            autoCapitalize="words"
-            autoComplete="off"
-            type="text"
-            name="cat-name"
-            value={catName}
-            onChange={(e) => {
-              setcatName(e.target.value);
-              e.preventDefault();
-            }}
-          />
-          <br />
-          Enter Category Weight:
-          <input
-            required
-            autoComplete="off"
-            type="number"
-            name="cat-name"
-            value={catWeight}
-            onChange={(e) => setcatWeight(e.target.value)}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-
+      <div className="categoryForm">
+        <h2 className="totalGrade">You Have A {fg}%</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Enter Category Name:
+            <input
+              className="inputs"
+              required
+              autoCapitalize="words"
+              autoComplete="off"
+              type="text"
+              name="cat-name"
+              value={catName}
+              onChange={(e) => {
+                setcatName(e.target.value);
+                e.preventDefault();
+              }}
+            />
+            <br />
+            Enter Category Weight:
+            <input
+              className="inputs"
+              required
+              autoComplete="off"
+              type="number"
+              name="cat-name"
+              value={catWeight}
+              onChange={(e) => setcatWeight(e.target.value)}
+            />
+          </label>
+          <button className="addCategory" type="submit"><FontAwesomeIcon icon={faPlus}/></button>
+        </form>
+      </div>
       <div id="display-categories">
         {/* Displaying the newly made category */}
         {categories.map((cat) => {
           return (
-            <Category
+            <CategoryTemplate
               key={cat.key}
               name={cat.name}
               weight={cat.weight}
@@ -114,8 +124,8 @@ function EnterCategory(props) {
           );
         })}
       </div>
-      <button type={"submit"} onClick={handleCalculate}>
-        Calculate!
+      <button className="button" type={"submit"} onClick={handleCalculate}>
+      Calculate!
       </button>
     </div>
   );

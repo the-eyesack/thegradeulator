@@ -1,0 +1,13 @@
+.categoryDiv {
+    border-top: 1px solid var(--main);
+    padding-bottom: 15px;
+}
+
+.categoryHeader {
+    text-transform: uppercase;
+    color: var(--secondary);
+}
+
+svg.svg-inline--fa.fa-plus {
+    background: none;
+}

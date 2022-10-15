@@ -1,9 +1,9 @@
 import React, {  useState } from "react";
-import Assignment from "./assignments";
+import Assignment from "./assignmentTemplate";
 import { v4 as uuid } from "uuid";
 import { useStateWithCallback } from "../useStateWithCallback";
 
-const EnterAssignment2 = (props) => {
+const EnterAssignment = (props) => {
   //user inputs
   const [assignmentName, setassignmentName] = useState("");
   const [yourGrade, setyourGrade] = useState("");
@@ -63,6 +63,7 @@ const EnterAssignment2 = (props) => {
           Add Assignment:
           <input
             required
+            className="inputs"
             autoCapitalize="words"
             autoComplete="off"
             type="text"
@@ -73,6 +74,7 @@ const EnterAssignment2 = (props) => {
           />
           <input
             required
+            className="inputs"
             autoCapitalize="words"
             autoComplete="off"
             type="number"
@@ -83,6 +85,7 @@ const EnterAssignment2 = (props) => {
           />
           <input
             required
+            className="inputs"
             autoCapitalize="words"
             autoComplete="off"
             type="number"
@@ -109,4 +112,4 @@ const EnterAssignment2 = (props) => {
     </div>
   );
 };
-export default EnterAssignment2
+export default EnterAssignment
