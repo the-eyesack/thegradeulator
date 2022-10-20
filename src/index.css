@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --main: #5A4088;
+  --secondary: #82754A;
+}
+
+* {
+  font-family: "karmina-sans";
+  font-size: 15px;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}

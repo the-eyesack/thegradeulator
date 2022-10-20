@@ -1,15 +1,15 @@
 import React from "react";
+import "./assignmentTemplate.style.css"
 
 const AssignmentTemplate = React.memo((props) => {
   console.log("ASSIGNMENT " + JSON.stringify(props));
   return (
-    <div>
-      <p className="Assignment">
-        {props.name} - Grade: {props.yourGrade}/{props.maxGrade} (
-        {Math.round((props.yourGrade / props.maxGrade) * 100)}%){" "}
-      </p>
-      ***************
-    </div>
+      <tr>
+          <td id="name">{props.name}</td>
+          <td>{props.yourGrade}</td>
+          <td>{props.maxGrade}</td>
+          <td>{Math.round((props.yourGrade / props.maxGrade) * 100)}%</td>
+      </tr>
   );
 });
 

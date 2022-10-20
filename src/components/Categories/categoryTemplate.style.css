@@ -1,13 +1,19 @@
-.categoryDiv {
-    border-top: 1px solid var(--main);
-    padding-bottom: 15px;
-}
-
-.categoryHeader {
-    text-transform: uppercase;
+.categoryDiv h1 {
     color: var(--secondary);
+    font-family: "Highgate";
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    margin: 0;
 }
 
-svg.svg-inline--fa.fa-plus {
-    background: none;
+.categoryDiv h2 {
+    margin: 0;
+    font-size: 0.6em;
+    color: #716432;
+    display: inline;
+}
+
+.categoryDiv {
+    margin-left: 0.5em;
 }
