@@ -1,28 +1,15 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-:root {
-  --main: #5A4088;
-  --secondary: #82754A;
-}
-
-* {
-  font-family: "karmina-sans";
-  font-size: 15px;
-}
-
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
+@layer components {
+    .plus-button {
+        @apply border-2 border-main rounded-md ml-2 px-2 bg-secondary text-white;
+    }
+    .input-left {
+        @apply border-t-4 border-l-4 border-b-4 rounded-l-md border-main text-xl text-center;
+    }
+    .input-right {
+        @apply border-t-4 border-r-4 border-b-4 rounded-r-md border-main text-xl text-center;
+    }
 }

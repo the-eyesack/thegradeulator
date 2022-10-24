@@ -15,7 +15,7 @@ const Category = React.memo((props) => {
   return (
     <div className="categoryDiv">
         <h1 className="categoryHeader">{props.name} <h2> WEIGHT: {props.weight}%</h2></h1>
-        <EnterAssignment setAverage={setAverage} assignmentList={props.assignmentList}/>
+        <EnterAssignment setAverage={setAverage} assignmentList={props.assignmentList} setAssignmentList={props.setAssignmentList}/>
     </div>
   );
 });

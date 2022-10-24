@@ -1,7 +1,6 @@
 import React, {  useEffect, useState } from "react";
 import Assignment from "./assignmentTemplate";
 import { v4 as uuid } from "uuid";
-import { useStateWithCallback } from "../useStateWithCallback";
 import  "./enterAssignment.style.css"
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -12,39 +11,27 @@ const EnterAssignment = (props) => {
   const [yourGrade, setyourGrade] = useState("");
   const [maxGrade, setmaxGrade] = useState("");
 
-  const [assignments, setAssignments] = useState([]);
-
   //the part where it does math
-  const [totalGrade, modifyTotalGrade] = useStateWithCallback(0);
-  const [maximumGrade, modifyMaximumGrade] = useStateWithCallback(0);
+  const totalGrade = props.assignmentList.reduce((prev, current) => prev + parseInt(current.yourGrade), 0)
+  const maximumGrade = props.assignmentList.reduce((prev, current) => prev + parseInt(current.maxGrade), 0)
   const [catAvg, setCatAvg] = useState();
 
-  const calculateCatAvg = (yourGrade, maxGrade) => {
-    let p;
-    modifyTotalGrade(totalGrade + parseInt(yourGrade), (prevValue, newValue) => {
-      return (p = newValue);
-    });
+  const calculateCatAvg = (totalGrade, maximumGrade) => {
+    console.log("totalGrade = ", totalGrade)
+    console.log("maximumGrade = ", maximumGrade)
 
-    modifyMaximumGrade(maximumGrade + parseInt(maxGrade), (prevValue, newValue) => {
-      console.log("maximumGrade = ", newValue);
-      let ca = (p / newValue) * 100;
-      console.log("catAvg = ", ca);
-      setCatAvg(ca);
-      props.setAverage(ca);
-    });
-  };
+    console.log(totalGrade/maximumGrade)
+    setCatAvg(totalGrade/maximumGrade * 100)
+    props.setAverage(totalGrade/maximumGrade * 100);
+  }
 
-  useEffect(() => {
-    let assignmentList = props.assignmentList
-    console.log("assignmentList = ", assignmentList);
-    setAssignments(assignmentList)
+  useEffect( ()=>{
+      console.log(props.assignmentList.length)
 
-    for(let i = 0; i < assignmentList.length; i++) {
-      console.log(assignmentList[i]['yourGrade'])
-      //TODO: calculateCatAvg values get overriden, try using something similar to const totalWeight = categories.reduce((acc, curr) => acc + parseInt(curr.weight), 0)
-      calculateCatAvg(assignmentList[i]['yourGrade'], assignmentList[i]['maxGrade']);
-    }
-  }, [])
+      for(let i = 0; i < props.assignmentList.length; i++) {
+        calculateCatAvg(totalGrade, maximumGrade)
+      }
+  }, [props.assignmentList])
 
   //average grade variables
   const handleSubmit = (e) => {
@@ -55,13 +42,14 @@ const EnterAssignment = (props) => {
 
     //creating assignment object
     const newAssignment = {
+      key: uuid(),
       assignmentName: assignmentName,
       yourGrade: yourGrade,
       maxGrade: maxGrade,
     };
-    setAssignments((oldList) => [newAssignment, ...oldList]);
+    props.setAssignmentList((oldList) => [newAssignment, ...oldList]);
+    console.log(props.assignmentList)
 
-    calculateCatAvg(yourGrade, maxGrade);
     //reset inputs
     setassignmentName("");
     setyourGrade("");
@@ -74,7 +62,6 @@ const EnterAssignment = (props) => {
         Category GRADE: <h4>{Math.round(catAvg * 100)/100}</h4>
       </h3>
       <form onSubmit={handleSubmit}>
-        <label className="enterAssignment">
           <input
               required
               maxLength="50"
@@ -110,10 +97,9 @@ const EnterAssignment = (props) => {
               onChange={(e) => setmaxGrade(e.target.value)}
           />
           <button id="addAssignment" type={"submit"}><FontAwesomeIcon icon={faPlus}/></button>
-        </label>
       </form>
 
-      {/* displaying new assignment */}
+       {/*displaying new assignment*/}
       <table>
         <tr className="headers">
           <th id="nameHeader">Name</th>
@@ -121,9 +107,10 @@ const EnterAssignment = (props) => {
           <th>Max Grade</th>
           <th>Percentage</th>
         </tr>
-      {assignments.map((a) => {
+      {props.assignmentList.map((a) => {
           return (
                 <Assignment
+                    // key={a.key}
                     name={a.assignmentName}
                     yourGrade={a.yourGrade}
                     maxGrade={a.maxGrade}
