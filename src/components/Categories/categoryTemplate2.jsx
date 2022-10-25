@@ -15,9 +15,14 @@ const Category = (props) => {
   const [maxGrade, setmaxGrade] = useState("");
 
   return (
-    <div className="categoryDiv">
+    <div className="ml-2">
       <h1 className="categoryHeader">
-        {props.name} <h2> WEIGHT: {props.weight}%</h2>
+        <h2
+        className="text-4xl mt-4 uppercase font-black inline-block">{props.name}</h2>
+        <h2 className="inline-block text-xl ml-2 font-bold text-secondary"> WEIGHT: {props.weight}% |</h2>
+        <h2 className="inline-block text-xl ml-2 font-bold text-secondary">
+        GRADE: {Math.round(props.average * 100) / 100}
+        </h2>
       </h1>
       <form onSubmit={handleSubmit}>
         <label className="">
@@ -63,13 +68,9 @@ const Category = (props) => {
           </button>
         </label>
       </form>
-      <div className="categoryGrade">
-        CATEGORY GRADE: {Math.round(props.average * 100) / 100}
-      </div>
-
-      <table>
-        <tr className="tableHeaders">
-          <th id="nameHeader">Name</th>
+      <table className="table-fixed w-[45%]">
+        <tr>
+          <th className="w-1/2">Name</th>
           <th>Your Grade</th>
           <th>Max Grade</th>
           <th>Percentage</th>

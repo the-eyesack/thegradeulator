@@ -45,10 +45,11 @@ function App(props) {
   };
 
   const [datakey, setDatakey] = useState();
+  const secondPtSaveKey = "th4%k5p03Ta&"
   const handleLoad = (e) => {
     e.preventDefault();
 
-    var decrypted = CryptoJS.AES.decrypt(datakey, saveKey)
+    var decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey)
     try {
       JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
     }
@@ -86,10 +87,10 @@ function App(props) {
   const [saveKey, setSaveKey] = useState()
   const exportSave = (e) => {
     e.preventDefault();
-    let genSaveKey = JSON.stringify(Math.round(Math.random()*10000))
+    let genSaveKey = JSON.stringify(Math.round(Math.random()*10000)) 
     console.log(genSaveKey)
 
-    var encrypted = CryptoJS.AES.encrypt(JSON.stringify(categories), genSaveKey).toString();
+    var encrypted = CryptoJS.AES.encrypt(JSON.stringify(categories), genSaveKey + secondPtSaveKey).toString();
     console.log(encrypted);
     navigator.clipboard.writeText(encrypted)
     alert("Save key copied to clipboard. Your passcode is " + genSaveKey)
@@ -141,7 +142,7 @@ function App(props) {
   }, [categories]);
 
   return (
-    <div className="BIGONE">
+    <div>
       <div className="border-t-4 border-main pt-4">
         <div
             className="text-[12em] inline-block text-main/70 font-black absolute right-10 top-40"
@@ -149,7 +150,7 @@ function App(props) {
         <form onSubmit={handleSubmit}>
           <label>
             <input
-                className="input-left"
+                className="ml-2 input-left"
               id="catNameInput"
               required
               maxLength="50"
@@ -181,9 +182,6 @@ function App(props) {
               className="plus-button">
             <FontAwesomeIcon icon={faPlus} className="text-white"/>
           </button>
-          {/*<button id="calculate" type="button" onClick={handleCalculate}>*/}
-          {/*  Calculate!*/}
-          {/*</button>*/}
         </form>
       </div>
 
@@ -198,7 +196,7 @@ function App(props) {
       </div>
 
       {/* "saving" */}
-      <div className="absolute content-center inline-block right-20 top-20">
+      <div className="absolute inline-block text-center right-20 top-20">
         <form onSubmit={handleLoad}>
           <input
               className="input-left"
@@ -221,7 +219,7 @@ function App(props) {
           </button>
         </form>
         <button
-            className= "plus-button"
+            className= "plus-button mt-2 text-xl"
             type="button" onClick={exportSave}>
           Export Data!
         </button>
