@@ -70,17 +70,17 @@ const Category = (props) => {
       </form>
       <table className="table-fixed w-[45%]">
         <tr>
-          <th className="w-1/2">Name</th>
+          <th className="border-r-2 border-primary w-1/2">Name</th>
           <th>Your Grade</th>
           <th>Max Grade</th>
           <th>Percentage</th>
         </tr>
         {props.assignments.map((assignment) => (
           <tr>
-            <td id="assignmentName">{assignment.name}</td>
-            <td>{assignment.yourGrade}</td>
-            <td>{assignment.maxGrade}</td>
-            <td>
+            <td className="border-r-2">{assignment.name}</td>
+            <td className="text-center">{assignment.yourGrade}</td>
+            <td className="text-center">{assignment.maxGrade}</td>
+            <td className="text-center">
               {Math.round(
                 (assignment.yourGrade / assignment.maxGrade) * 10000
               ) / 100}
