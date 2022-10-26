@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Category from "./components/Categories/categoryTemplate2";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
+
 const CryptoJS = require("crypto-js");
 
 function App(props) {
@@ -196,7 +197,7 @@ function App(props) {
       </div>
 
       {/* "saving" */}
-      <div className="absolute inline-block text-center right-20 top-20">
+      <div className="absolute inline-block text-center right-20 top-[10vh]">
         <form onSubmit={handleLoad}>
           <input
               className="input-left"
@@ -219,7 +220,7 @@ function App(props) {
           </button>
         </form>
         <button
-            className= "plus-button mt-2 text-xl"
+            className= " plus-button mt-2 text-xl"
             type="button" onClick={exportSave}>
           Export Data!
         </button>

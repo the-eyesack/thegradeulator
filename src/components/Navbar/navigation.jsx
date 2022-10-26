@@ -1,13 +1,12 @@
 import React from "react";
-import "./navigation.style.css"
-
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import  { faGithub } from "@fortawesome/free-brands-svg-icons";
+import Logo from '../../assets/logo.svg'
 const Navigation = () => {
-    return (<nav className="nav">
-        <a href="/" id="title">THE GRADEULATOR</a>
-        <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/cool">Page2</a></li>
-        </ul>
+    return (
+        <nav className="sticky flex justify-between h-[10vh]">
+            <a href="/" id="title"><img src={ Logo } alt="logo" className="h-[4.5rem] my-2 ml-2 inline"/></a>
+            <a target="_blank" href="https://github.com/the-eyesack/grade-calculator" rel="noreferrer" className="inline"><FontAwesomeIcon icon={faGithub} className="text-7xl my-2 mr-2 relative" /></a>
     </nav>)
 }
 

@@ -1,22 +1,23 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   mode: 'jit',
-  purge: ['./src/**/*.{js,jsx,ts,tsx}'],
-  content: [],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', "./public/index.html"],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', "./public/index.html"],
   theme: {
-    colors: {
-      main: '#5A4088',
-      secondary: '#82754A',
-      white: '#FFFFFF'
+    extend: {
+      colors: {
+        main: '#5A4088',
+        secondary: '#82754A',
+      },
+      fontFamily: {
+        sans: ['karmina-sans'],
+        serif: ['serif'],
+      },
+      container: {
+        center: 'true',
+      },
     },
-    fontFamily: {
-      sans: ['karmina-sans'],
-      serif: ['serif'],
-    },
-    container: {
-      center: 'true',
-    },
-    extend: {},
   },
   plugins: [],
 }
