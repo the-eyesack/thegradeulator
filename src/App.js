@@ -186,6 +186,7 @@ function App(props) {
       <div id="display-categories">
         {categories.map((category) => (
           <Category
+              key={category.id}
             id={category.id}
             {...category}
             handleAssignmentUpdate={handleAssignmentUpdate}
