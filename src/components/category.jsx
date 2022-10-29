@@ -17,17 +17,21 @@ const Category = (props) => {
   return (
     <div className="ml-2">
       <h1 className="categoryHeader">
-        <h2
-        className="text-4xl mt-4 uppercase font-black inline-block">{props.name}</h2>
-        <h2 className="inline-block text-xl ml-2 font-bold text-secondary"> WEIGHT: {props.weight}% |</h2>
+        <h2 className="text-4xl mt-4 uppercase font-black inline-block">
+          {props.name}
+        </h2>
         <h2 className="inline-block text-xl ml-2 font-bold text-secondary">
-        GRADE: {Math.round(props.average * 100) / 100}
+          {" "}
+          WEIGHT: {props.weight}% |
+        </h2>
+        <h2 className="inline-block text-xl ml-2 font-bold text-secondary">
+          GRADE: {Math.round(props.average * 100) / 100}
         </h2>
       </h1>
       <form onSubmit={handleSubmit}>
         <label className="">
           <input
-              className="input-left"
+            className="input-left"
             required
             maxLength="50"
             id="assignmentName"
@@ -40,7 +44,7 @@ const Category = (props) => {
             onChange={(e) => setassignmentName(e.target.value)}
           />
           <input
-              className="border-t-4 border-b-4 border-main text-center text-xl"
+            className="border-t-4 border-b-4 border-main text-center text-xl"
             required
             id="assignmentYourGrade"
             autoCapitalize="words"
@@ -52,7 +56,7 @@ const Category = (props) => {
             onChange={(e) => setyourGrade(e.target.value)}
           />
           <input
-              className="input-right"
+            className="input-right"
             required
             id="assignmentMaxGrade"
             autoCapitalize="words"

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 
 import App from './App';
-import Navigation from "./components/Navbar/navigation";
+import Navigation from "./components/navigation";
 
 import reportWebVitals from './reportWebVitals';
 

@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
-import Category from "./components/Categories/categoryTemplate2";
+import Category from "./components/category";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
-
 const CryptoJS = require("crypto-js");
 
 function App(props) {
@@ -35,35 +34,30 @@ function App(props) {
 
       //adding it into array
       setCategories((oldList) => [newCat, ...oldList]);
-      console.log(newCat);
       setcatName("");
       setcatWeight("");
-
-      console.log("Total Weight = ", totalWeight);
     } else {
       alert("Something went wrong!");
     }
   };
 
   const [datakey, setDatakey] = useState();
-  const secondPtSaveKey = "th4%k5p03Ta&"
+  const secondPtSaveKey = "th4%k5p03Ta&";
   const handleLoad = (e) => {
     e.preventDefault();
 
-    var decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey)
+    var decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey);
     try {
-      JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
+      JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+    } catch (error) {
+      alert("Incorrect Credentials.");
     }
-    catch (error) {
-      alert("Incorrect Credentials.")
-    }
-    let parsed = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
+    let parsed = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
     setCategories(
       parsed.map((category) => {
         let totalYourGrade = 0;
         let totalMaxGrade = 0;
-        console.log("this is: ", category.name);
 
         for (
           let assignment = 0;
@@ -85,21 +79,27 @@ function App(props) {
     );
   };
 
-  const [saveKey, setSaveKey] = useState()
+  const [saveKey, setSaveKey] = useState();
   const exportSave = (e) => {
     e.preventDefault();
-    let genSaveKey = JSON.stringify(Math.round(Math.random()*10000)) 
-    console.log(genSaveKey)
+    let genSaveKey = JSON.stringify(Math.round(Math.random() * 10000));
 
-    var encrypted = CryptoJS.AES.encrypt(JSON.stringify(categories), genSaveKey + secondPtSaveKey).toString();
-    console.log(encrypted);
-    navigator.clipboard.writeText(encrypted)
-    alert("Save key copied to clipboard. Your passcode is " + genSaveKey)
-  }
+    let encrypted = CryptoJS.AES.encrypt(
+      JSON.stringify(categories),
+      genSaveKey + secondPtSaveKey
+    ).toString();
+    navigator.clipboard.writeText(encrypted);
+    alert("Save key copied to clipboard. Your passcode is " + genSaveKey);
+  };
 
   //updating assignments
   const [totalGrade, setTotalGrade] = useState(0);
-  const handleAssignmentUpdate = (id, yourGradeToAdd, maxGradeToAdd, assignmentName) => {
+  const handleAssignmentUpdate = (
+    id,
+    yourGradeToAdd,
+    maxGradeToAdd,
+    assignmentName
+  ) => {
     setCategories(
       categories.map((category) => {
         let newYourGrade = category.yourGrade + parseInt(yourGradeToAdd);
@@ -145,13 +145,13 @@ function App(props) {
   return (
     <div>
       <div className="border-t-4 border-main pt-4">
-        <div
-            className="text-[12em] inline-block text-main/70 font-black absolute right-10 top-40"
-        >{Math.round(totalGrade * 100) / 100}%</div>
+        <div className="text-[12em] inline-block text-main/70 font-black absolute right-10 top-40">
+          {Math.round(totalGrade * 100) / 100}%
+        </div>
         <form onSubmit={handleSubmit}>
           <label>
             <input
-                className="ml-2 input-left"
+              className="ml-2 input-left"
               id="catNameInput"
               required
               maxLength="50"
@@ -179,9 +179,8 @@ function App(props) {
               onChange={(e) => setcatWeight(e.target.value)}
             />
           </label>
-          <button
-              className="plus-button">
-            <FontAwesomeIcon icon={faPlus} className="text-white"/>
+          <button className="plus-button">
+            <FontAwesomeIcon icon={faPlus} className="text-white" />
           </button>
         </form>
       </div>
@@ -192,6 +191,7 @@ function App(props) {
             id={category.id}
             {...category}
             handleAssignmentUpdate={handleAssignmentUpdate}
+            setCategories={setCategories}
           />
         ))}
       </div>
@@ -200,28 +200,30 @@ function App(props) {
       <div className="absolute inline-block text-center right-20 top-[10vh]">
         <form onSubmit={handleLoad}>
           <input
-              className="input-left"
-              required
-              placeholder="Enter Key"
-              type="text"
-              value={datakey}
-              onChange={(e) => setDatakey(e.target.value)}
+            className="input-left"
+            required
+            placeholder="Enter Key"
+            type="text"
+            value={datakey}
+            onChange={(e) => setDatakey(e.target.value)}
           />
           <input
-              className="input-right"
-              placeholder="Enter Passcode"
-              type="number"
-              value={saveKey}
-              onChange={(e) => setSaveKey(e.target.value)}
-              required
+            className="input-right"
+            placeholder="Enter Passcode"
+            type="number"
+            value={saveKey}
+            onChange={(e) => setSaveKey(e.target.value)}
+            required
           />
-          <button  className="plus-button">
+          <button className="plus-button">
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </form>
         <button
-            className= " plus-button mt-2 text-xl"
-            type="button" onClick={exportSave}>
+          className=" plus-button mt-2 text-xl"
+          type="button"
+          onClick={exportSave}
+        >
           Export Data!
         </button>
       </div>
