@@ -34,7 +34,6 @@ const Category = (props) => {
             className="input-left"
             required
             maxLength="50"
-            id="assignmentName"
             autoCapitalize="words"
             autoComplete="off"
             type="text"
@@ -46,7 +45,6 @@ const Category = (props) => {
           <input
             className="border-t-4 border-b-4 border-main text-center text-xl"
             required
-            id="assignmentYourGrade"
             autoCapitalize="words"
             autoComplete="off"
             type="number"
@@ -58,7 +56,6 @@ const Category = (props) => {
           <input
             className="input-right"
             required
-            id="assignmentMaxGrade"
             autoCapitalize="words"
             autoComplete="off"
             type="number"

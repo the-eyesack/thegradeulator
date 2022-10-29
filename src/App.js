@@ -152,7 +152,6 @@ function App(props) {
           <label>
             <input
               className="ml-2 input-left"
-              id="catNameInput"
               required
               maxLength="50"
               placeholder="Enter Category Name"
@@ -168,7 +167,6 @@ function App(props) {
             />
             <input
               className="input-right"
-              id="catWeightInput"
               required
               maxLength="3"
               placeholder="Weight (% of 100)"
