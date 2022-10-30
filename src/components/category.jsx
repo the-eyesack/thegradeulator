@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- i
 
 const Category = (props) => {
   const handleSubmit = (e) => {
@@ -13,6 +13,10 @@ const Category = (props) => {
   const [assignmentName, setassignmentName] = useState("");
   const [yourGrade, setyourGrade] = useState("");
   const [maxGrade, setmaxGrade] = useState("");
+
+  const removeAssignment = (key, categoryId) => {
+    props.removeAssignment(key, categoryId)
+  }
 
   return (
     <div className="ml-2">
@@ -29,45 +33,45 @@ const Category = (props) => {
         </h2>
       </h1>
       <form onSubmit={handleSubmit}>
-        <label className="">
+        <div className="input-group">
           <input
-            className="input-left"
-            required
-            maxLength="50"
-            autoCapitalize="words"
-            autoComplete="off"
-            type="text"
-            name="assignment-task"
-            placeholder="Assignment Name"
-            value={assignmentName}
-            onChange={(e) => setassignmentName(e.target.value)}
+              className="input"
+              required
+              maxLength="50"
+              autoCapitalize="words"
+              autoComplete="off"
+              type="text"
+              name="assignment-task"
+              placeholder="Assignment Name"
+              value={assignmentName}
+              onChange={(e) => setassignmentName(e.target.value)}
           />
           <input
-            className="border-t-4 border-b-4 border-main text-center text-xl"
-            required
-            autoCapitalize="words"
-            autoComplete="off"
-            type="number"
-            name="assignment-task"
-            placeholder="Your Grade"
-            value={yourGrade}
-            onChange={(e) => setyourGrade(e.target.value)}
+              className="input"
+              required
+              autoCapitalize="words"
+              autoComplete="off"
+              type="number"
+              name="assignment-task"
+              placeholder="Your Grade"
+              value={yourGrade}
+              onChange={(e) => setyourGrade(e.target.value)}
           />
           <input
-            className="input-right"
-            required
-            autoCapitalize="words"
-            autoComplete="off"
-            type="number"
-            name="assignment-task"
-            placeholder="Max Grade"
-            value={maxGrade}
-            onChange={(e) => setmaxGrade(e.target.value)}
+              className="input"
+              required
+              autoCapitalize="words"
+              autoComplete="off"
+              type="number"
+              name="assignment-task"
+              placeholder="Max Grade"
+              value={maxGrade}
+              onChange={(e) => setmaxGrade(e.target.value)}
           />
+        </div>
           <button className="plus-button" type={"submit"}>
-            <FontAwesomeIcon icon={faPlus} />
+            <FontAwesomeIcon icon={solid('plus')} />
           </button>
-        </label>
       </form>
       <table className="table-fixed w-[45%]">
         <tr>
@@ -87,6 +91,10 @@ const Category = (props) => {
               ) / 100}
               %
             </td>
+            <button onClick={ (e)=> {
+              e.preventDefault();
+              removeAssignment(assignment.key, props.id)
+            } }><FontAwesomeIcon icon={solid('trash')} className="opacity-25 hover:opacity-100"/></button>
           </tr>
         ))}
       </table>

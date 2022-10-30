@@ -7,12 +7,12 @@ import Navigation from "./components/navigation";
 
 import reportWebVitals from './reportWebVitals';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <>
         <Navigation/>
         <App />
+        <p className="fixed left-[95%] top-[97%]">Build: 1.0.0</p>
     </>
 );
 

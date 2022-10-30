@@ -1,8 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- i
 import React, { useEffect, useRef, useState } from "react";
 import Category from "./components/category";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
+import Swal from 'sweetalert2'
+
 const CryptoJS = require("crypto-js");
 
 function App(props) {
@@ -10,16 +12,39 @@ function App(props) {
   const [catWeight, setcatWeight] = useState("");
   const [categories, setCategories] = useState([]);
 
+  const SwalError =
+      {
+          title: 'Error!',
+          confirmationButtonText: 'Ok',
+          icon: 'warning',
+          iconColor: '#5A4088',
+          color: '#5A4088',
+          confirmButtonColor: '#82754A'
+      }
+
+  const SwalToastSuccess = {
+      toast: true,
+      position: 'bottom-left',
+      icon:'success',
+      showConfirmButton: false,
+      timer: 3000,
+      background: '#5A4088',
+      iconColor: '#FFFFFF',
+      color: '#FFFFFF',
+  }
+
   const totalWeight = categories.reduce(
     (acc, curr) => acc + parseInt(curr.weight),
     0
   );
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const shouldUpdate =
       totalWeight <= 100 &&
       catWeight <= 100 &&
+        catWeight > 0 &&
       totalWeight + parseInt(catWeight) <= 100;
     if (shouldUpdate) {
       let newCat = {
@@ -31,13 +56,19 @@ function App(props) {
         average: 0,
         assignments: [],
       };
-
       //adding it into array
       setCategories((oldList) => [newCat, ...oldList]);
       setcatName("");
       setcatWeight("");
+      Swal.fire({
+        ...SwalToastSuccess,
+          title: 'Added category!'
+      })
     } else {
-      alert("Something went wrong!");
+      Swal.fire({
+          ...SwalError,
+          text: 'Make sure your total weight is less than or equal to 100, and that your weight is a positive number.',
+      })
     }
   };
 
@@ -46,11 +77,15 @@ function App(props) {
   const handleLoad = (e) => {
     e.preventDefault();
 
-    var decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey);
+    let decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey);
     try {
       JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
     } catch (error) {
-      alert("Incorrect Credentials.");
+      Swal.fire({
+          ...SwalError,
+          title: 'Invalid credentials!',
+          text: 'Make sure your key and passcode are correct.'
+      })
     }
     let parsed = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
@@ -89,10 +124,17 @@ function App(props) {
       genSaveKey + secondPtSaveKey
     ).toString();
     navigator.clipboard.writeText(encrypted);
-    alert("Save key copied to clipboard. Your passcode is " + genSaveKey);
+    Swal.fire({
+        title: 'Success!',
+        icon: 'success',
+        iconColor: '#5A4088',
+        color: '#5A4088',
+        confirmButtonColor: '#82754A',
+        text: 'A new key has been copied to your clipboard. Please remember your key, which is ' + genSaveKey + '.',
+    })
   };
 
-  //updating assignments
+  // adding / updating assignments
   const [totalGrade, setTotalGrade] = useState(0);
   const handleAssignmentUpdate = (
     id,
@@ -100,29 +142,83 @@ function App(props) {
     maxGradeToAdd,
     assignmentName
   ) => {
+      let yourGrade = parseInt(yourGradeToAdd)
+      let maxGrade = parseInt(maxGradeToAdd)
+      if(yourGrade > 0 || maxGrade > 0) {
+          setCategories(
+              categories.map((category) => {
+                  let newYourGrade = category.yourGrade + yourGrade;
+                  let newMaxGrade = category.maxGrade + maxGrade;
+                  let newAssignment = {
+                      key: uuid(),
+                      name: assignmentName,
+                      yourGrade: yourGrade,
+                      maxGrade: maxGrade,
+                  };
+                  let newAverage = newYourGrade / newMaxGrade;
+
+                  if (category.id === id) {
+                      return {
+                          ...category,
+                          average: newAverage * 100,
+                          yourGrade: newYourGrade,
+                          maxGrade: newMaxGrade,
+                          assignments: [newAssignment, ...category.assignments],
+                      };
+                  } else {
+                      return category;
+                  }
+              })
+          );
+          Swal.fire({
+              ...SwalToastSuccess,
+              title: 'Added assignment!'
+          })
+      } else {Swal.fire({
+          ...SwalError,
+          text: 'Make sure you are entering positive numbers.',
+      })}
+  };
+
+  const removeAssignment = (key, categoryId) => {
     setCategories(
       categories.map((category) => {
-        let newYourGrade = category.yourGrade + parseInt(yourGradeToAdd);
-        let newMaxGrade = category.maxGrade + parseInt(maxGradeToAdd);
-        let newAssignment = {
-          key: uuid(),
-          name: assignmentName,
-          yourGrade: parseInt(yourGradeToAdd),
-          maxGrade: parseInt(maxGradeToAdd),
-        };
-        let newAverage = newYourGrade / newMaxGrade;
+          if (category.id === categoryId) {
+              const assignments = category.assignments;
+              const index = assignments.map((e) => e.key).indexOf(key);
 
-        if (category.id === id) {
-          return {
-            ...category,
-            average: newAverage * 100,
-            yourGrade: newYourGrade,
-            maxGrade: newMaxGrade,
-            assignments: [newAssignment, ...category.assignments],
-          };
-        } else {
-          return category;
-        }
+              let newYourGrade =
+                  category.yourGrade - parseInt(assignments[index]["yourGrade"]);
+              let newMaxGrade =
+                  category.maxGrade - parseInt(assignments[index]["maxGrade"]);
+              let newAverage = newYourGrade / newMaxGrade;
+
+              if (isNaN(newAverage)) {
+                  newAverage = 0;
+              }
+              if (isNaN(newYourGrade)) {
+                  newYourGrade = 0;
+              }
+              if (isNaN(newMaxGrade)) {
+                  newMaxGrade = 0;
+              }
+
+              Swal.fire({
+                  ...SwalToastSuccess,
+                  title: 'Deleted Assignment!'
+              })
+
+              return {
+                  ...category,
+                  average: newAverage * 100,
+                  yourGrade: newYourGrade,
+                  maxGrade: newMaxGrade,
+                  assignments: assignments.filter(
+                      (assignment) => assignment !== assignments[index]
+                  ),
+              };
+          } else {return category}
+
       })
     );
   };
@@ -148,37 +244,43 @@ function App(props) {
         <div className="text-[12em] inline-block text-main/70 font-black absolute right-10 top-40">
           {Math.round(totalGrade * 100) / 100}%
         </div>
-        <form onSubmit={handleSubmit}>
-          <label>
-            <input
-              className="ml-2 input-left"
-              required
-              maxLength="50"
-              placeholder="Enter Category Name"
-              autoCapitalize="words"
-              autoComplete="off"
-              type="text"
-              name="cat-name"
-              value={catName}
-              onChange={(e) => {
-                setcatName(e.target.value);
-                e.preventDefault();
-              }}
-            />
-            <input
-              className="input-right"
-              required
-              maxLength="3"
-              placeholder="Weight (% of 100)"
-              autoComplete="off"
-              type="number"
-              name="cat-name"
-              value={catWeight}
-              onChange={(e) => setcatWeight(e.target.value)}
-            />
-          </label>
+        <form className=" ml-2 inline-block" onSubmit={handleSubmit}>
+            <div className="input-group">
+                <label>
+                    <input
+                        className="input"
+                        required
+                        maxLength="50"
+                        placeholder="Enter Category Name"
+                        autoCapitalize="words"
+                        autoComplete="off"
+                        type="text"
+                        name="cat-name"
+                        value={catName}
+                        onChange={(e) => {
+                            setcatName(e.target.value);
+                            e.preventDefault();
+                        }}
+                    />
+                    <input
+                        className="input"
+                        required
+                        maxLength="3"
+                        placeholder="Weight (% of 100)"
+                        autoComplete="off"
+                        type="number"
+                        name="cat-name"
+                        value={catWeight}
+                        onChange={(e) => {
+                            setcatWeight(e.target.value)
+                            if(catWeight < 0) {setcatWeight(0)}
+                        }}
+                        onKeyDown={(e)=> { if (e.code === 'Minus') {e.preventDefault();}}}
+                    />
+                </label>
+            </div>
           <button className="plus-button">
-            <FontAwesomeIcon icon={faPlus} className="text-white" />
+            <FontAwesomeIcon icon={solid('plus')} className="text-white" />
           </button>
         </form>
       </div>
@@ -186,9 +288,10 @@ function App(props) {
       <div id="display-categories">
         {categories.map((category) => (
           <Category
-              key={category.id}
+            key={category.id}
             id={category.id}
             {...category}
+            removeAssignment={removeAssignment}
             handleAssignmentUpdate={handleAssignmentUpdate}
             setCategories={setCategories}
           />
@@ -196,26 +299,28 @@ function App(props) {
       </div>
 
       {/* "saving" */}
-      <div className="absolute inline-block text-center right-20 top-[10vh]">
+      <div className="absolute text-center right-20 top-[10vh]">
         <form onSubmit={handleLoad}>
-          <input
-            className="input-left"
-            required
-            placeholder="Enter Key"
-            type="text"
-            value={datakey}
-            onChange={(e) => setDatakey(e.target.value)}
-          />
-          <input
-            className="input-right"
-            placeholder="Enter Passcode"
-            type="number"
-            value={saveKey}
-            onChange={(e) => setSaveKey(e.target.value)}
-            required
-          />
+            <div className="input-group">
+                <input
+                    className="input"
+                    required
+                    placeholder="Enter Key"
+                    type="text"
+                    value={datakey}
+                    onChange={(e) => setDatakey(e.target.value)}
+                />
+                <input
+                    className="text-center focus:outline-none"
+                    placeholder="Enter Passcode"
+                    type="number"
+                    value={saveKey}
+                    onChange={(e) => setSaveKey(e.target.value)}
+                    required
+                />
+            </div>
           <button className="plus-button">
-            <FontAwesomeIcon icon={faPlus} />
+            <FontAwesomeIcon icon={solid('plus')} />
           </button>
         </form>
         <button

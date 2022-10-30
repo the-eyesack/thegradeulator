@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 @layer components {
+    .input-group {
+        @apply border-4 border-main text-xl inline-block rounded-md
+    }
     .plus-button {
         @apply border-2 border-main rounded-md ml-2 px-2 bg-secondary text-white;
     }
-    .input-left {
-        @apply border-t-4 border-l-4 border-b-4 rounded-l-md border-main text-xl text-center;
-    }
-    .input-right {
-        @apply border-t-4 border-r-4 border-b-4 rounded-r-md border-main text-xl text-center;
+    .input {
+        @apply text-center focus:outline-none
     }
 }
