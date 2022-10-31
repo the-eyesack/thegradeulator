@@ -12,7 +12,6 @@ root.render(
     <>
         <Navigation/>
         <App />
-        <p className="fixed left-[95%] top-[97%]">Build: 1.0.0</p>
     </>
 );
 

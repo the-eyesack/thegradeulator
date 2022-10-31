@@ -24,7 +24,7 @@ function App(props) {
 
   const SwalToastSuccess = {
       toast: true,
-      position: 'bottom-left',
+      position: 'bottom-right',
       icon:'success',
       showConfirmButton: false,
       timer: 3000,
@@ -240,11 +240,11 @@ function App(props) {
 
   return (
     <div>
-      <div className="border-t-4 border-main pt-4">
-        <div className="text-[12em] inline-block text-main/70 font-black absolute right-10 top-40">
+      <div className="pt-4">
+        <div className="text-[12em] block text-center md:inline-block text-main/70 font-black md:fixed md:right-10 md:top-40">
           {Math.round(totalGrade * 100) / 100}%
         </div>
-        <form className=" ml-2 inline-block" onSubmit={handleSubmit}>
+        <form className=" ml-2 text-center md:inline-block" onSubmit={handleSubmit}>
             <div className="input-group">
                 <label>
                     <input
@@ -299,7 +299,7 @@ function App(props) {
       </div>
 
       {/* "saving" */}
-      <div className="absolute text-center right-20 top-[10vh]">
+      <div className="md:absolute border-t-2 border-main mt-4 pt-2 md:border-0 md:pt-0 md:mt-0 text-center right-20 md:top-[9.5vh]">
         <form onSubmit={handleLoad}>
             <div className="input-group">
                 <input
@@ -320,7 +320,8 @@ function App(props) {
                 />
             </div>
           <button className="plus-button">
-            <FontAwesomeIcon icon={solid('plus')} />
+            Import Grades!
+            {/* <FontAwesomeIcon icon={solid('plus')} /> */}
           </button>
         </form>
         <button
@@ -331,6 +332,7 @@ function App(props) {
           Export Data!
         </button>
       </div>
+      <p className="fixed text-right top-[97%]">Build: 0.2.0</p>
     </div>
   );
 }

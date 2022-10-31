@@ -19,7 +19,7 @@ const Category = (props) => {
   }
 
   return (
-    <div className="ml-2">
+    <div className="md:inline-block text-center md:text-left md:ml-2 ">
       <h1 className="categoryHeader">
         <h2 className="text-4xl mt-4 uppercase font-black inline-block">
           {props.name}
@@ -73,15 +73,15 @@ const Category = (props) => {
             <FontAwesomeIcon icon={solid('plus')} />
           </button>
       </form>
-      <table className="table-fixed w-[45%]">
+      <table className="md:table-fixed mx-auto md:mx-0 text-center md:w-[45%]">
         <tr>
-          <th className="border-r-2 border-primary w-1/2">Name</th>
+          <th className="border-r-2 border-primary md:w-1/2 break-normal truncate md:break-words">Name</th>
           <th>Your Grade</th>
           <th>Max Grade</th>
           <th>Percentage</th>
         </tr>
         {props.assignments.map((assignment) => (
-          <tr>
+          <tr className="group/item align-middle ">
             <td className="border-r-2">{assignment.name}</td>
             <td className="text-center">{assignment.yourGrade}</td>
             <td className="text-center">{assignment.maxGrade}</td>
@@ -94,7 +94,7 @@ const Category = (props) => {
             <button onClick={ (e)=> {
               e.preventDefault();
               removeAssignment(assignment.key, props.id)
-            } }><FontAwesomeIcon icon={solid('trash')} className="opacity-25 hover:opacity-100"/></button>
+            } }><FontAwesomeIcon icon={solid('trash')} className="opacity-25 invisible group-hover/item:visible hover:opacity-100"/></button>
           </tr>
         ))}
       </table>
