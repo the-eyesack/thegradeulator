@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- i
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- i
 import React, { useEffect, useRef, useState } from "react";
 import Category from "./components/category";
 import { v4 as uuid } from "uuid";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 const CryptoJS = require("crypto-js");
 
@@ -12,26 +12,25 @@ function App(props) {
   const [catWeight, setcatWeight] = useState("");
   const [categories, setCategories] = useState([]);
 
-  const SwalError =
-      {
-          title: 'Error!',
-          confirmationButtonText: 'Ok',
-          icon: 'warning',
-          iconColor: '#5A4088',
-          color: '#5A4088',
-          confirmButtonColor: '#82754A'
-      }
+  const SwalError = {
+    title: "Error!",
+    confirmationButtonText: "Ok",
+    icon: "warning",
+    iconColor: "#5A4088",
+    color: "#5A4088",
+    confirmButtonColor: "#82754A",
+  };
 
   const SwalToastSuccess = {
-      toast: true,
-      position: 'bottom-right',
-      icon:'success',
-      showConfirmButton: false,
-      timer: 3000,
-      background: '#5A4088',
-      iconColor: '#FFFFFF',
-      color: '#FFFFFF',
-  }
+    toast: true,
+    position: "bottom-right",
+    icon: "success",
+    showConfirmButton: false,
+    timer: 3000,
+    background: "#5A4088",
+    iconColor: "#FFFFFF",
+    color: "#FFFFFF",
+  };
 
   const totalWeight = categories.reduce(
     (acc, curr) => acc + parseInt(curr.weight),
@@ -44,7 +43,7 @@ function App(props) {
     const shouldUpdate =
       totalWeight <= 100 &&
       catWeight <= 100 &&
-        catWeight > 0 &&
+      catWeight > 0 &&
       totalWeight + parseInt(catWeight) <= 100;
     if (shouldUpdate) {
       let newCat = {
@@ -62,13 +61,13 @@ function App(props) {
       setcatWeight("");
       Swal.fire({
         ...SwalToastSuccess,
-          title: 'Added category!'
-      })
+        title: "Added category!",
+      });
     } else {
       Swal.fire({
-          ...SwalError,
-          text: 'Make sure your total weight is less than or equal to 100, and that your weight is a positive number.',
-      })
+        ...SwalError,
+        text: "Make sure your total weight is less than or equal to 100, and that your weight is a positive number.",
+      });
     }
   };
 
@@ -80,19 +79,26 @@ function App(props) {
     let decrypted = CryptoJS.AES.decrypt(datakey, saveKey + secondPtSaveKey);
     try {
       JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+      Swal.fire({
+        ...SwalToastSuccess,
+        text: "Successfully imported grades!",
+      });
     } catch (error) {
       Swal.fire({
-          ...SwalError,
-          title: 'Invalid credentials!',
-          text: 'Make sure your key and passcode are correct.'
-      })
+        ...SwalError,
+        title: "Invalid credentials!",
+        text: "Make sure your key and passcode are correct.",
+      });
     }
+    setSaveKey("");
+    setDatakey("");
     let parsed = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
 
     setCategories(
       parsed.map((category) => {
         let totalYourGrade = 0;
         let totalMaxGrade = 0;
+        let newAverage = 0;
 
         for (
           let assignment = 0;
@@ -103,10 +109,14 @@ function App(props) {
           totalYourGrade += parseInt(currentAssignment["yourGrade"]);
           totalMaxGrade += parseInt(currentAssignment["maxGrade"]);
         }
+        newAverage = Math.round((totalYourGrade / totalMaxGrade) * 10000) / 100;
+        if (isNaN(newAverage)) {
+          newAverage = 0;
+        }
 
         return {
           ...category,
-          average: Math.round((totalYourGrade / totalMaxGrade) * 10000) / 100,
+          average: newAverage,
           yourGrade: totalYourGrade,
           maxGrade: totalMaxGrade,
         };
@@ -125,13 +135,16 @@ function App(props) {
     ).toString();
     navigator.clipboard.writeText(encrypted);
     Swal.fire({
-        title: 'Success!',
-        icon: 'success',
-        iconColor: '#5A4088',
-        color: '#5A4088',
-        confirmButtonColor: '#82754A',
-        text: 'A new key has been copied to your clipboard. Please remember your key, which is ' + genSaveKey + '.',
-    })
+      title: "Success!",
+      icon: "success",
+      iconColor: "#5A4088",
+      color: "#5A4088",
+      confirmButtonColor: "#82754A",
+      text:
+        "A new key has been copied to your clipboard. Please remember your passcode, which is " +
+        genSaveKey +
+        ".",
+    });
   };
 
   // adding / updating assignments
@@ -142,83 +155,89 @@ function App(props) {
     maxGradeToAdd,
     assignmentName
   ) => {
-      let yourGrade = parseInt(yourGradeToAdd)
-      let maxGrade = parseInt(maxGradeToAdd)
-      if(yourGrade > 0 || maxGrade > 0) {
-          setCategories(
-              categories.map((category) => {
-                  let newYourGrade = category.yourGrade + yourGrade;
-                  let newMaxGrade = category.maxGrade + maxGrade;
-                  let newAssignment = {
-                      key: uuid(),
-                      name: assignmentName,
-                      yourGrade: yourGrade,
-                      maxGrade: maxGrade,
-                  };
-                  let newAverage = newYourGrade / newMaxGrade;
+    let yourGrade = parseInt(yourGradeToAdd);
+    let maxGrade = parseInt(maxGradeToAdd);
+    if (yourGrade > 0 || maxGrade > 0) {
+      setCategories(
+        categories.map((category) => {
+          let newYourGrade = category.yourGrade + yourGrade;
+          let newMaxGrade = category.maxGrade + maxGrade;
+          let newAssignment = {
+            key: uuid(),
+            name: assignmentName,
+            yourGrade: yourGrade,
+            maxGrade: maxGrade,
+          };
+          let newAverage = newYourGrade / newMaxGrade;
+          if (isNaN(newAverage)) {
+            newAverage = 0;
+          }
 
-                  if (category.id === id) {
-                      return {
-                          ...category,
-                          average: newAverage * 100,
-                          yourGrade: newYourGrade,
-                          maxGrade: newMaxGrade,
-                          assignments: [newAssignment, ...category.assignments],
-                      };
-                  } else {
-                      return category;
-                  }
-              })
-          );
-          Swal.fire({
-              ...SwalToastSuccess,
-              title: 'Added assignment!'
-          })
-      } else {Swal.fire({
-          ...SwalError,
-          text: 'Make sure you are entering positive numbers.',
-      })}
+          if (category.id === id) {
+            return {
+              ...category,
+              average: newAverage * 100,
+              yourGrade: newYourGrade,
+              maxGrade: newMaxGrade,
+              assignments: [newAssignment, ...category.assignments],
+            };
+          } else {
+            return category;
+          }
+        })
+      );
+      Swal.fire({
+        ...SwalToastSuccess,
+        title: "Added assignment!",
+      });
+    } else {
+      Swal.fire({
+        ...SwalError,
+        text: "Make sure you are entering positive numbers.",
+      });
+    }
   };
 
   const removeAssignment = (key, categoryId) => {
     setCategories(
       categories.map((category) => {
-          if (category.id === categoryId) {
-              const assignments = category.assignments;
-              const index = assignments.map((e) => e.key).indexOf(key);
+        if (category.id === categoryId) {
+          const assignments = category.assignments;
+          const index = assignments.map((e) => e.key).indexOf(key);
 
-              let newYourGrade =
-                  category.yourGrade - parseInt(assignments[index]["yourGrade"]);
-              let newMaxGrade =
-                  category.maxGrade - parseInt(assignments[index]["maxGrade"]);
-              let newAverage = newYourGrade / newMaxGrade;
+          let newYourGrade =
+            category.yourGrade - parseInt(assignments[index]["yourGrade"]);
+          let newMaxGrade =
+            category.maxGrade - parseInt(assignments[index]["maxGrade"]);
+          let newAverage = newYourGrade / newMaxGrade;
 
-              if (isNaN(newAverage)) {
-                  newAverage = 0;
-              }
-              if (isNaN(newYourGrade)) {
-                  newYourGrade = 0;
-              }
-              if (isNaN(newMaxGrade)) {
-                  newMaxGrade = 0;
-              }
+          if (isNaN(newAverage)) {
+            newAverage = 0;
+          }
+          if (isNaN(newYourGrade)) {
+            newYourGrade = 0;
+          }
+          if (isNaN(newMaxGrade)) {
+            newMaxGrade = 0;
+          }
 
-              Swal.fire({
-                  ...SwalToastSuccess,
-                  title: 'Deleted Assignment!'
-              })
+          Swal.fire({
+            ...SwalToastSuccess,
+            title: "Deleted Assignment!",
+          });
 
-              return {
-                  ...category,
-                  average: newAverage * 100,
-                  yourGrade: newYourGrade,
-                  maxGrade: newMaxGrade,
-                  assignments: assignments.filter(
-                      (assignment) => assignment !== assignments[index]
-                  ),
-              };
-          } else {return category}
-
+          return {
+            ...category,
+            average: newAverage * 100,
+            yourGrade: newYourGrade,
+            maxGrade: newMaxGrade,
+            assignments: assignments.filter(
+              (assignment) => assignment !== assignments[index]
+            ),
+          };
+        } else {
+          return category;
+        }
       })
     );
   };
@@ -234,6 +253,9 @@ function App(props) {
     let grade = 0;
     for (let i = 0; i < categories.length; i++) {
       grade += Math.round(categories[i].average * categories[i].weight) / 100;
+      if (isNaN(grade)) {
+        grade = 0;
+      }
     }
     setTotalGrade(grade);
   }, [categories]);
@@ -244,43 +266,52 @@ function App(props) {
         <div className="text-[12em] block text-center md:inline-block text-main/70 font-black md:fixed md:right-10 md:top-40">
           {Math.round(totalGrade * 100) / 100}%
         </div>
-        <form className=" ml-2 text-center md:inline-block" onSubmit={handleSubmit}>
-            <div className="input-group">
-                <label>
-                    <input
-                        className="input"
-                        required
-                        maxLength="50"
-                        placeholder="Enter Category Name"
-                        autoCapitalize="words"
-                        autoComplete="off"
-                        type="text"
-                        name="cat-name"
-                        value={catName}
-                        onChange={(e) => {
-                            setcatName(e.target.value);
-                            e.preventDefault();
-                        }}
-                    />
-                    <input
-                        className="input"
-                        required
-                        maxLength="3"
-                        placeholder="Weight (% of 100)"
-                        autoComplete="off"
-                        type="number"
-                        name="cat-name"
-                        value={catWeight}
-                        onChange={(e) => {
-                            setcatWeight(e.target.value)
-                            if(catWeight < 0) {setcatWeight(0)}
-                        }}
-                        onKeyDown={(e)=> { if (e.code === 'Minus') {e.preventDefault();}}}
-                    />
-                </label>
-            </div>
+        <form
+          className=" ml-2 text-center md:inline-block"
+          onSubmit={handleSubmit}
+        >
+          <div className="input-group">
+            <label>
+              <input
+                className="input"
+                required
+                maxLength="50"
+                placeholder="Enter Category Name"
+                autoCapitalize="words"
+                autoComplete="off"
+                type="text"
+                name="cat-name"
+                value={catName}
+                onChange={(e) => {
+                  setcatName(e.target.value);
+                  e.preventDefault();
+                }}
+              />
+              <input
+                className="input"
+                required
+                maxLength="3"
+                placeholder="Weight (% of 100)"
+                autoComplete="off"
+                type="number"
+                name="cat-name"
+                value={catWeight}
+                onChange={(e) => {
+                  setcatWeight(e.target.value);
+                  if (catWeight < 0) {
+                    setcatWeight(0);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.code === "Minus") {
+                    e.preventDefault();
+                  }
+                }}
+              />
+            </label>
+          </div>
           <button className="plus-button">
-            <FontAwesomeIcon icon={solid('plus')} className="text-white" />
+            <FontAwesomeIcon icon={solid("plus")} className="text-white" />
           </button>
         </form>
       </div>
@@ -301,24 +332,24 @@ function App(props) {
       {/* "saving" */}
       <div className="md:absolute border-t-2 border-main mt-4 pt-2 md:border-0 md:pt-0 md:mt-0 text-center right-20 md:top-[9.5vh]">
         <form onSubmit={handleLoad}>
-            <div className="input-group">
-                <input
-                    className="input"
-                    required
-                    placeholder="Enter Key"
-                    type="text"
-                    value={datakey}
-                    onChange={(e) => setDatakey(e.target.value)}
-                />
-                <input
-                    className="text-center focus:outline-none"
-                    placeholder="Enter Passcode"
-                    type="number"
-                    value={saveKey}
-                    onChange={(e) => setSaveKey(e.target.value)}
-                    required
-                />
-            </div>
+          <div className="input-group">
+            <input
+              className="input"
+              required
+              placeholder="Enter Key"
+              type="text"
+              value={datakey}
+              onChange={(e) => setDatakey(e.target.value)}
+            />
+            <input
+              className="text-center focus:outline-none"
+              placeholder="Enter Passcode"
+              type="password"
+              value={saveKey}
+              onChange={(e) => setSaveKey(e.target.value)}
+              required
+            />
+          </div>
           <button className="plus-button">
             Import Grades!
             {/* <FontAwesomeIcon icon={solid('plus')} /> */}
@@ -332,7 +363,7 @@ function App(props) {
           Export Data!
         </button>
       </div>
-      <p className="fixed text-right top-[97%]">Build: 0.2.0</p>
+      <p className="fixed text-right top-[97%]">Build: 1.0.0</p>
     </div>
   );
 }

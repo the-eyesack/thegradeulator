@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Logo from '../assets/logo.svg'
 import Swal from 'sweetalert2'
 
@@ -16,8 +16,7 @@ const Navigation = () => {
                         title: 'This is The Gradeulator.',
                         confirmButtonColor: '#82754A',
                         color: '#5A4088',
-                        html: 'A grade point average calculator made by Isaac W. <br/> To get started, enter your categories (assessments, classwork, etc.) and its weight. <br/> Then, enter the assignments that belong in that category. <br/> Once your are satisfied, hit the export data button.',
-
+                        html: 'A grade point average calculator made by Isaac Wong. <br/> To get started, enter your categories (assessments, classwork, etc.) and its weight. <br/> Then, enter the assignments that belong in that category. <br/> Once your are satisfied, hit the export data button. <br/><br/> <a target="_blank" href="https://youtu.be/qOwc4Ff1Rvg">Click here to watch the demo & learn more.</a>',
                     }
                 )}}><FontAwesomeIcon icon={solid('circle-info')} size="3x" className=" text-main"/></button>
                 <a target="_blank" href="https://github.com/the-eyesack/grade-calculator" rel="noreferrer" className="inline pl-4"> <FontAwesomeIcon icon={brands('github')} size="3x" className="text-main"/> </a>
